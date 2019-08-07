@@ -2,6 +2,17 @@ locals {
   virtual_machine_name = "testbox"
 }
 
+# Render the template for CustomData.bin
+data "template_file" "CustomData" {
+  template = "${file("${path.root}/files/bootstrap.ps1.tpl")}"
+  vars = {
+    chef_server_url         = "${var.chef_server_url}"
+    validation_client_name  = "${var.validation_client_name}"
+    validator_key           = "${file("${var.validator_key_file}")}"
+  }
+}
+
+# Create the VM
 resource "azurerm_virtual_machine" "client" {
   name                          = "${local.virtual_machine_name}"
   location                      = "${var.location}"
@@ -24,20 +35,24 @@ resource "azurerm_virtual_machine" "client" {
     managed_disk_type = "Standard_LRS"
   }
 
+# CustomData.bin is populated with the custom_data directive here
   os_profile {
     computer_name  = "${local.virtual_machine_name}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
-    custom_data = "${file("${path.root}/files/bootstrap.ps1")}"
+    custom_data = "${data.template_file.CustomData.rendered}"
   }
 
+# Ensure we're enabling the VM agent
   os_profile_windows_config {
     provision_vm_agent        = true
     enable_automatic_upgrades = true
   }
 }
 
+# Execute powershell with the VM agent to bootstrap the box (from the CustomData.bin file)
 resource "azurerm_virtual_machine_extension" "script" {
+  depends_on           = ["azurerm_virtual_machine.client"]
   name                 = "CustomScriptExtension"
   location             = "${var.location}"
   resource_group_name  = "${var.resource_group_name}"
@@ -45,7 +60,6 @@ resource "azurerm_virtual_machine_extension" "script" {
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.4"
-  depends_on           = ["azurerm_virtual_machine.client"]
 
   settings = <<SETTINGS
     {

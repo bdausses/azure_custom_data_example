@@ -1,3 +1,6 @@
 prefix = "CustomDataTesting"
 admin_username = "demoadmin"
 admin_password = "PassW0rd1234!"
+chef_server_url = "https://your.chef.server.domain/organizations/your-org/"
+validation_client_name = "your-org-validator"
+validator_key_file = "/path/to/local/copy/of/the/validator/key/file.pem"

@@ -25,6 +25,9 @@ module "windows-client" {
   subnet_id                 = "${module.network.domain_clients_subnet_id}"
   admin_username            = "${var.admin_username}"
   admin_password            = "${var.admin_password}"
+  chef_server_url           = "${var.chef_server_url}"
+  validation_client_name    = "${var.validation_client_name}"
+  validator_key_file        = "${var.validator_key_file}"
 }
 
 output "windows_client_public_ip" {
