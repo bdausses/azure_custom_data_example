@@ -34,3 +34,8 @@ variable "validation_client_name" {
 variable "validator_key_file" {
   description = "The path to the local copy of your validator key file"
 }
+
+variable "run_list" {
+  description = "Run list for the node"
+  type = "list"
+}

@@ -8,9 +8,9 @@ Start-Process msiexec.exe -ArgumentList @('/qn', '/lv C:\Windows\Temp\chef-log.t
 
 ## Create first-boot.json
 $firstboot = @{
-   "run_list" = @("recipe[chef-client::default]");
+   "run_list" = @("${run_list}");
    "chef_client" = @{
-     "interval" = 600
+     "interval" = 300
    }
 }
 Set-Content -Path c:\chef\first-boot.json -Value ($firstboot | ConvertTo-Json -Depth 10)

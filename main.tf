@@ -28,6 +28,7 @@ module "windows-client" {
   chef_server_url           = "${var.chef_server_url}"
   validation_client_name    = "${var.validation_client_name}"
   validator_key_file        = "${var.validator_key_file}"
+  run_list                  = "${var.run_list}"
 }
 
 output "windows_client_public_ip" {

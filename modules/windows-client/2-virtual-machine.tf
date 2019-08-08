@@ -9,6 +9,8 @@ data "template_file" "CustomData" {
     chef_server_url         = "${var.chef_server_url}"
     validation_client_name  = "${var.validation_client_name}"
     validator_key           = "${file("${var.validator_key_file}")}"
+    # This set of functions produces a valid run list from the list variable "run_list"
+    run_list                = "${replace(replace(jsonencode(var.run_list), "[\"", ""), "\"]", "")}"
   }
 }
 
