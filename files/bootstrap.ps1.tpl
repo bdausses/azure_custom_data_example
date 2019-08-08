@@ -19,10 +19,11 @@ Set-Content -Path c:\chef\first-boot.json -Value ($firstboot | ConvertTo-Json -D
 $nodeName = "lab-win-{0}" -f (-join ((65..90) + (97..122) | Get-Random -Count 4 | % {[char]$_}))
 
 $clientrb = @"
-chef_server_url        '${chef_server_url}'
-validation_client_name '${validation_client_name}'
-validation_key         'C:\chef\validator.pem'
-node_name              '{0}'
+chef_license            'accept'
+chef_server_url         '${chef_server_url}'
+node_name               '{0}'
+validation_client_name  '${validation_client_name}'
+validation_key          'C:\chef\validator.pem'
 "@ -f $nodeName
 
 Set-Content -Path c:\chef\client.rb -Value $clientrb
